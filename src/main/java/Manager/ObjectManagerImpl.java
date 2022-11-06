@@ -1,20 +1,16 @@
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
+import Entity.*;
+import Entity.Object;
 
-public class ProductManagerImpl implements ProductManager{
+public class ObjectManagerImpl implements ObjectManager {
 
-    List<Product> listProducts;
+    List<Object> listProducts;
     HashMap<String, User> users;
-    Queue<Order> queueOrder;
 
     @Override
-    public List<Product> productsByPrice() {
-        return null;
-    }
-
-    @Override
-    public List<Product> productsBySales() {
+    public List<Object> objectsByPrice() {
         return null;
     }
 
@@ -23,19 +19,10 @@ public class ProductManagerImpl implements ProductManager{
 
     }
 
-    @Override
-    public Order processOrder() {
-        return null;
-    }
 
     @Override
-    public List<Order> ordersByUser(String userId) {
-        return null;
-    }
-
-    @Override
-    public void addUser(String s, String name, String surname) {
-
+    public void addUser(int userID, String name, String surname, String date, String email, String password, int coins) {
+        
     }
 
     @Override
@@ -68,3 +55,4 @@ public class ProductManagerImpl implements ProductManager{
         return 0;
     }
 }
+
