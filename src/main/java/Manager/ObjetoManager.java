@@ -13,8 +13,5 @@ public interface ObjetoManager {
     public List<ObjetoTienda> objectBoughtByUser(String userID);
     public int numObjetos();
     public int numUsuarios();
-
-
-
-
+    int size();
 }

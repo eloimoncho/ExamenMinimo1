@@ -2,12 +2,29 @@ package Manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import Entity.*;
 import Manager.*;
+import org.apache.log4j.Logger;
+
 public class ObjetoManagerImpl implements ObjetoManager {
 
+    private static ObjetoManager instance;
+    protected List<ObjetoTienda> objetos;
+    final static Logger logger = Logger.getLogger(ObjetoManagerImpl.class);
+
+    public static ObjetoManager getInstance() {
+        if (instance==null) instance = new ObjetoManagerImpl();
+        return instance;
+    }
+    public int size() {
+        int ret = this.objetos.size();
+        logger.info("size " + ret);
+
+        return ret;
+    }
     List<ObjetoTienda> listObjetos;
     HashMap<String, User> users;
 

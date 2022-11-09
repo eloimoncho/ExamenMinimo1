@@ -22,7 +22,9 @@ public class User {
         this.userSurname = userSurname;
         this.date = date;
         this.credenciales = credenciales;
+        this.coins=50;
     }
+
 
 
     //Getters y Setters
