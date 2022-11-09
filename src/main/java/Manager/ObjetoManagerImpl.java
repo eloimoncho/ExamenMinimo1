@@ -77,13 +77,6 @@ public class ObjetoManagerImpl implements ObjetoManager {
         });
         return aux;
     }
-
-    @Override
-    public List<ObjetoTienda> objectByPrice() {
-        this.listObjetos.sort((ObjetoTienda o2, ObjetoTienda o1)->Double.compare(o1.getObjectCoins(), o2.getObjectCoins()));
-        return this.listObjetos;
-    }
-
     @Override
     public int loginUser(String email, String password) {
         int loginPossible=1;
@@ -99,6 +92,13 @@ public class ObjetoManagerImpl implements ObjetoManager {
         }
         return loginPossible;
     }
+    @Override
+    public List<ObjetoTienda> objectByPrice() {
+        this.listObjetos.sort((ObjetoTienda o2, ObjetoTienda o1)->Double.compare(o1.getObjectCoins(), o2.getObjectCoins()));
+        return this.listObjetos;
+    }
+
+
 
     @Override
     public void addObject(String objectID, String name, String description, double coins) {
