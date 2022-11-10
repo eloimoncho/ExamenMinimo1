@@ -19,23 +19,44 @@ import java.util.List;
 @Path("/objetos")
 
 
-public class ObjetoService {
+public class PartidasService {
 
-        private ObjetoManager om;
+        private PartidasManager pm;
 
-        public ObjetoService() {
-            this.om = ObjetoManagerImpl.getInstance();
-            if (om.size()==0) {
-                this.om.registerUser("Eloi", "Moncho", "28/08/2001","eloi.moncho@estudiantat.upc.edu" ,"28082001" );
-                this.om.registerUser("Victor",  "Fernandez", "13/06/2001","victor.fernanadez@estudiantat.upc.edu", "13062001");
-                this.om.registerUser("Marc",  "Moran", "28/10/2001", "marc.moran@estudiantat.upc.edu", "28102001");
-
-                this.om.addObject("APL", "Apolo", "Milkshake thursday", 40);
-                this.om.addObject("RZZ", "Razz", "El Dirty",30);
-                this.om.addObject("CST", "Costa", "Blue Moon", 55);
+        public PartidasService() {
+            this.pm = PartidasManagerImpl.getInstance();
+            if (pm.size()==0) {
+                this.pm.creacionPartida("Brawl", "Guerra", 10 );
+                this.pm.creacionPartida("Agario",  "Guai",2);
+                this.pm.creacionPartida("Candy",  "Arcade", 3);
             }
         }
 
+        //Primera función: inicio partida por usuario
+        @PUT
+        @ApiOperation(value = "Iniciar un juego", notes = "asdasd")
+        @ApiResponses(value = {
+                @ApiResponse(code = 201, message = "El juego se inicia correctamente"),
+                @ApiResponse(code = 404, message = "No es posible iniciar el juego"),
+
+        })
+        @Path("/BuyObject/{partidaID}/{usuarioID}")
+        public Response inicioPartidaPorUsuario(@PathParam("partidaID") String partidaID, @PathParam("usuarioID") String usuarioID) {
+            int verificador = this.pm.inicioPartidaPorUsuario(partidaID,usuarioID);
+            if (verificador==0) {
+                return Response.status(201).build();
+            }
+            else {
+                return Response.status(404).build();
+            }
+        }
+
+        //Segunda función: nivel actual
+
+
+
+
+/*
         //Primera función: Registro
         @POST
         @ApiOperation(value = "Registrar usuario", notes = "asdasd")
@@ -46,7 +67,7 @@ public class ObjetoService {
         @Path("/users")
         @Consumes(MediaType.APPLICATION_JSON)
         public Response registerUser(User user){
-            int verificador = this.om.registerUser(user.getUserName(), user.getUserSurname(), user.getDate(), user.getCredenciales().getEmail(), user.getCredenciales().getPassword());
+            int verificador = this.pm.registerUser(user.getUserName(), user.getUserSurname(), user.getDate(), user.getCredenciales().getEmail(), user.getCredenciales().getPassword());
             if(verificador == 0){
                 return Response.status(201).build();
             }
@@ -66,7 +87,7 @@ public class ObjetoService {
         @Produces(MediaType.APPLICATION_JSON)
         public Response getUsersByAlphabet() {
 
-            List<User> listUsers = this.om.usersByAlphabet();
+            List<User> listUsers = this.pm.usersByAlphabet();
 
             GenericEntity<List<User>> entity = new GenericEntity<List<User>>(listUsers) {};
             return Response.status(201).entity(entity).build()  ;
@@ -82,7 +103,7 @@ public class ObjetoService {
         @Path("/login")
         @Produces(MediaType.APPLICATION_JSON)
         public Response loginUser(Credenciales credenciales) {
-            int verificador = this.om.loginUser(credenciales.getEmail(),credenciales.getPassword());
+            int verificador = this.pm.loginUser(credenciales.getEmail(),credenciales.getPassword());
             if (verificador == 0)
                 return Response.status(201).build();
             else
@@ -99,7 +120,7 @@ public class ObjetoService {
         @Produces(MediaType.APPLICATION_JSON)
         public Response getAllObjetos() {
 
-            List<ObjetoTienda> listObjetos = this.om.objectByPrice();
+            List<ObjetoTienda> listObjetos = this.pm.objectByPrice();
             GenericEntity<List<ObjetoTienda>> entity = new GenericEntity<List<ObjetoTienda>>(listObjetos) {};
             return Response.status(201).entity(entity).build()  ;
         }
@@ -113,21 +134,21 @@ public class ObjetoService {
         @Path("/addObject")
         @Produces(MediaType.APPLICATION_JSON)
         public Response addObject(ObjetoTienda objeto) {
-            this.om.addObject(objeto.getObjectID(),objeto.getObjectName(),objeto.getObjectDescription(),objeto.getObjectCoins());
+            this.pm.addObject(objeto.getObjectID(),objeto.getObjectName(),objeto.getObjectDescription(),objeto.getObjectCoins());
             return Response.status(201).build();
         }
 
-        //Sexta función: un usuario compra un objeto
+        //Sexta función: un usuario cpmpra un objeto
         @PUT
-        @ApiOperation(value = "Comprar un objeto", notes = "asdasd")
+        @ApiOperation(value = "Cpmprar un objeto", notes = "asdasd")
         @ApiResponses(value = {
-                @ApiResponse(code = 201, message = "Compra exitosa"),
+                @ApiResponse(code = 201, message = "Cpmpra exitosa"),
                 @ApiResponse(code = 404, message = "No existe este usuario"),
                 @ApiResponse(code = 405, message = "No tienes suficientes monedas"),
         })
         @Path("/BuyObject/{userID}/{objectID}")
         public Response buyObjectByUser(@PathParam("userID") String userID, @PathParam("objectID") String objectID) {
-            int verificador = this.om.buyObjectByUser(objectID,userID);
+            int verificador = this.pm.buyObjectByUser(objectID,userID);
             if (verificador==0) {
                 return Response.status(201).build();
             }
@@ -139,9 +160,9 @@ public class ObjetoService {
 
         }
 
-        //Séptima función: lista de objetos comprados por un usuario
+        //Séptima función: lista de objetos cpmprados por un usuario
         @GET
-        @ApiOperation(value = "Lista de objetos comprados", notes = "asdasd")
+        @ApiOperation(value = "Lista de objetos cpmprados", notes = "asdasd")
         @ApiResponses(value = {
                 @ApiResponse(code = 201, message = "Correcto", response = ObjetoTienda.class, responseContainer="List"),
         })
@@ -149,10 +170,10 @@ public class ObjetoService {
         @Produces(MediaType.APPLICATION_JSON)
         public Response objectsBoughtByUser(@PathParam("userID") String userID) {
 
-            List<ObjetoTienda> listObjetos = this.om.objectBoughtByUser(userID);
+            List<ObjetoTienda> listObjetos = this.pm.objectBoughtByUser(userID);
             GenericEntity<List<ObjetoTienda>> entity = new GenericEntity<List<ObjetoTienda>>(listObjetos) {};
             return Response.status(201).entity(entity).build()  ;
         }
-
+*/
     }
 

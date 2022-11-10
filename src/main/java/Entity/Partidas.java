@@ -12,6 +12,8 @@ public class Partidas {
 
     List<Usuario> listaUsuarios;
 
+    int estadoPartida; //0 se está jugando la partida, 1 se ha finalizado la partida
+
     //Constructores
 
     public Partidas(){}
@@ -36,6 +38,10 @@ public class Partidas {
         return niveles;
     }
 
+    public int getEstadoPartida() {
+        return estadoPartida;
+    }
+
     public void setPartidaID(String partidaID) {
         this.partidaID = partidaID;
     }
@@ -48,7 +54,12 @@ public class Partidas {
         this.niveles = niveles;
     }
 
+    public void setEstadoPartida(int estadoPartida) {
+        this.estadoPartida = estadoPartida;
+    }
+
     public List<Usuario> getListaUsuarios() {
         return listaUsuarios;
     }
+
 }

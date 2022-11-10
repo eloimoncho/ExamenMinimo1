@@ -4,19 +4,19 @@ import Entity.*;
 import java.util.*;
 import org.apache.log4j.Logger;
 
-public class ObjetoManagerImpl implements ObjetoManager {
+public class PartidasManagerImpl implements PartidasManager {
 
-    List<ObjetoTienda> listObjetos;
-    HashMap<String, User> users;
-    private static ObjetoManager instance;
-    final static Logger logger = Logger.getLogger(ObjetoManagerImpl.class);
+    List<Partidas> listaPartidas;
+    HashMap<String, Usuario> listaUsuarios;
+    private static PartidasManager instance;
+    final static Logger logger = Logger.getLogger(PartidasManagerImpl.class);
 
-    public static ObjetoManager getInstance() {
-        if (instance==null) instance = new ObjetoManagerImpl();
+    public static PartidasManager getInstance() {
+        if (instance==null) instance = new PartidasManagerImpl();
         return instance;
     }
     public int size() {
-        int ret = this.listObjetos.size();
+        int ret = this.listaPartidas.size();
         logger.info("size " + ret);
 
         return ret;
@@ -24,23 +24,130 @@ public class ObjetoManagerImpl implements ObjetoManager {
 
     //Constructores
 
-    public ObjetoManagerImpl() {
-        this.listObjetos = new ArrayList<>();
-        this.users = new HashMap<>();
+    public PartidasManagerImpl() {
+        this.listaPartidas = new ArrayList<>();
+        this.listaUsuarios = new HashMap<>();
     }
+
+    //Funciones de PartidasManager
+    @Override
+    public int creacionPartida(String partidaID, String descripcion, int numNiveles) {
+        Partidas X = new Partidas(partidaID,descripcion,numNiveles);
+        X.setEstadoPartida(0); //la partida está activa, 1 cuando la partida finaliza
+        return X.getEstadoPartida();
+    }
+
+    @Override
+    public int inicioPartidaPorUsuario(String partidaID, String usuarioID) {
+        int posibleJugar=1;
+
+        int numUsers = this.listaUsuarios.size();
+        for (int i=0; i<numUsers; i++){
+            String idHashmap = Integer.toString(i);
+            if ((Objects.equals(this.listaUsuarios.get(idHashmap).getUsuarioID(), usuarioID)) && this.listaUsuarios.get(idHashmap).getJugandoPartida()!="0"){ //El usuario no está jugando otra partida
+                int numPartidas=this.listaPartidas.size();
+                for (int j=0;j<numPartidas;j++) {
+                    if ((Objects.equals(this.listaPartidas.get(j).getPartidaID(), partidaID)) && this.listaPartidas.get(j).getEstadoPartida()==0){ // La partida está en curso
+                        posibleJugar=0;
+                    }
+                }
+            }
+        }
+        return posibleJugar;
+    }
+
+    @Override
+    public int nivelActual(String usuarioID) {
+        int nivel=0;
+        for (int i=0;i<this.listaPartidas.size();i++){
+            if(Objects.equals(this.listaUsuarios.get(usuarioID).getJugandoPartida(),this.listaPartidas.get(i).getPartidaID())){
+                nivel = this.listaUsuarios.get(usuarioID).getNivelUsuario();
+            }
+        }
+        return nivel;
+    }
+
+    @Override
+    public int puntuacionActual(String usuarioID) {
+        int puntuacion =  this.listaUsuarios.get(usuarioID).getPuntos();
+        return puntuacion;
+    }
+
+    @Override
+    public int pasarNivel(String usuarioID, String fecha) {
+        int nuevoNivel = this.listaUsuarios.get(usuarioID).getNivelUsuario();
+        for (int i = 0; i<this.listaPartidas.size();i++){
+            if (Objects.equals(this.listaUsuarios.get(usuarioID).getJugandoPartida(), this.listaPartidas.get(i).getPartidaID())){
+                if (this.listaPartidas.get(i).getNiveles() >nuevoNivel){
+                    nuevoNivel=nuevoNivel+1;
+                }
+                else{
+                    int puntos = this.listaUsuarios.get(i).getPuntos() + 100;
+                    this.listaUsuarios.get(usuarioID).setPuntos(puntos);
+                    String partidaJugando="0";
+                    this.listaUsuarios.get(usuarioID).setJugandoPartida(partidaJugando);
+                    nuevoNivel=0;
+                }
+            }
+        }
+        return nuevoNivel;
+    }
+
+    @Override
+    public int finalizarPartida(String usuarioID) { //retorna 0
+        int numUsers = this.listaUsuarios.size();
+        for (int i = 0; i < numUsers; i++) {
+            String idHashmap = Integer.toString(i);
+            if ((Objects.equals(this.listaUsuarios.get(idHashmap).getUsuarioID(), usuarioID))) {
+                if (Objects.equals(this.listaUsuarios.get(usuarioID).getJugandoPartida(), "0")) {
+                    return -1; // El usuario no está jugando ninguna partida
+                } else {
+                    if (this.listaPartidas.get(i).getEstadoPartida() == 0) {
+                        this.listaUsuarios.get(usuarioID).setJugandoPartida("0");
+                        return 0; //Se ha finalizado la partida
+                    } else {
+                        return -2; //La partida no està en curs
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+
+    @Override
+    public List<Usuario> usuariosJugadoPartida(String partidaID) {
+        List<Usuario> listaUsuariosPartida= new ArrayList<>();
+        for (int i=0;i<this.listaUsuarios.size();i++){
+            String idHashMap=Integer.toString(i);
+            if (Objects.equals(this.listaUsuarios.get(idHashMap).getJugandoPartida(),partidaID)){
+                Usuario aux=new Usuario(listaUsuarios.get(idHashMap).getUsuarioID(),listaUsuarios.get(idHashMap).getFecha());
+                listaUsuariosPartida.add(aux);
+            }
+        }
+        return listaUsuariosPartida;
+    }
+
+    @Override
+    public List<Partidas> partidasJugadasPorUsuario(String usuarioID) {
+        return listaUsuarios.get(usuarioID).getListaPartidas();
+    }
+
+
 
     //Funciones de implementación
     @Override
-    public int numObjetos() {
-        return this.listObjetos.size();
+    public int numPartidas() {
+        return this.listaPartidas.size();
     }
 
     @Override
     public int numUsuarios() {
-        return this.users.size();
+        return this.listaUsuarios.size();
     }
 
     //Funciones del ObjetoManager
+    /*
     @Override
     public int registerUser(String name, String surname, String birthDate, String email, String password) {
         String ID = Integer.toString(this.users.size());
@@ -138,6 +245,6 @@ public class ObjetoManagerImpl implements ObjetoManager {
     public List<ObjetoTienda> objectBoughtByUser(String userID) {
         return users.get(userID).getObjectsUser();
     }
-
+*/
 }
 

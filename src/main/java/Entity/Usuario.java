@@ -7,20 +7,22 @@ public class Usuario {
 
 
     String usuarioID;
-    String usarioName;
     String fecha;
 
-    double puntos;
+    int puntos;
+    int nivelUsuario;
+    List<Partidas> listaPartidasUsuario;
 
-    List<Partidas> listaPartidas;
+    String jugandoPartida; //0 el usuario no está jugando una partida, otro num es el ID de la partida
 
     //Constructores
 
-    public Usuario(String usuarioID, String usarioName, String fecha) {
+    public Usuario(String usuarioID, String fecha) {
         this.usuarioID = usuarioID;
-        this.usarioName = usarioName;
         this.fecha = fecha;
         this.puntos = 50;
+        this.listaPartidasUsuario=new LinkedList<>();
+        this.nivelUsuario=1;
     }
 
 
@@ -35,10 +37,17 @@ public class Usuario {
         return fecha;
     }
 
-    public double getPuntos() {
+    public int getPuntos() {
         return puntos;
     }
 
+    public String getJugandoPartida() {
+        return jugandoPartida;
+    }
+
+    public int getNivelUsuario() {
+        return nivelUsuario;
+    }
 
     public void setUsuarioID(String usuarioID) {
         this.usuarioID = usuarioID;
@@ -48,11 +57,15 @@ public class Usuario {
         this.fecha = fecha;
     }
 
-    public void setPuntos(double puntos) {
+    public void setPuntos(int puntos) {
         this.puntos = puntos;
     }
 
+    public void setJugandoPartida(String jugandoPartida) {
+        this.jugandoPartida = jugandoPartida;
+    }
+
     public List<Partidas> getListaPartidas() {
-        return listaPartidas;
+        return listaPartidasUsuario;
     }
 }
