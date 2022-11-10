@@ -18,14 +18,14 @@ public class ObjetoManagerImplTest {
         om = new ObjetoManagerImpl();
         
         //Registrar usuarios
-        om.registerUser("Eloi", "Moncho", "28/08/2001","eloi.moncho@etudiantat.upc.edu" ,"28082001" );
-        om.registerUser("Victor",  "Fernandez", "13/06/2001","victor.fernanadez@estudiantat.upc.edu", "13062001");
-        om.registerUser("Marc",  "Moran", "28/10/2001", "marc.moran@estudiantat.upc.edu", "28102001");
+        this.om.registerUser("Eloi", "Moncho", "28/08/2001","eloi.moncho@estudiantat.upc.edu" ,"28082001" );
+        this.om.registerUser("Victor",  "Fernandez", "13/06/2001","victor.fernanadez@estudiantat.upc.edu", "13062001");
+        this.om.registerUser("Marc",  "Moran", "28/10/2001", "marc.moran@estudiantat.upc.edu", "28102001");
 
         //Añadir objetos
-        om.addObject("APL", "Apolo", "Milkshake thursday", 40);
-        om.addObject("RZZ", "Razz", "El Dirty",30);
-        om.addObject("CST", "Costa", "Blue Moon", 55);
+        this.om.addObject("APL", "Apolo", "Milkshake thursday", 40);
+        this.om.addObject("RZZ", "Razz", "El Dirty",30);
+        this.om.addObject("CST", "Costa", "Blue Moon", 55);
 
     }
 
@@ -66,11 +66,11 @@ public class ObjetoManagerImplTest {
     @Test
     public void testloginUser(){
         // Login correcto
-        int verificador = this.om.loginUser("marcmoran@gmail.com", "28102001");
+        int verificador = this.om.loginUser("marcmoran@estudiantat.upc.edu", "28102001");
         Assert.assertEquals(0, verificador);
 
         // Login incorrecto
-        verificador = this.om.loginUser("marcmoran@gmail.com", "12345678");
+        verificador = this.om.loginUser("marcmoran@estudiantat.upc.edu", "12345678");
         Assert.assertEquals(1, verificador);
     }
 
@@ -85,14 +85,14 @@ public class ObjetoManagerImplTest {
     public void testObjectByPrice() {
         List<ObjetoTienda> products = this.om.objectByPrice();
 
-        Assert.assertEquals("AAA", products.get(0).getObjectID());
-        Assert.assertEquals(13, products.get(0).getObjectCoins(), 0);
+        Assert.assertEquals("CST", products.get(0).getObjectID());
+        Assert.assertEquals(55, products.get(0).getObjectCoins(), 0);
 
-        Assert.assertEquals("RZZ", products.get(1).getObjectID());
-        Assert.assertEquals(10, products.get(1).getObjectCoins(), 0);
+        Assert.assertEquals("APL", products.get(1).getObjectID());
+        Assert.assertEquals(40, products.get(1).getObjectCoins(), 0);
 
-        Assert.assertEquals("CST", products.get(2).getObjectID());
-        Assert.assertEquals(15, products.get(2).getObjectCoins(), 0);
+        Assert.assertEquals("RZZ", products.get(2).getObjectID());
+        Assert.assertEquals(30, products.get(2).getObjectCoins(), 0);
 
     }
 
@@ -100,7 +100,7 @@ public class ObjetoManagerImplTest {
     public void testBuyObjectByUser() {
         //Compra correcta verificador = 0
         int verificador = this.om.buyObjectByUser("APL","1");
-        Assert.assertEquals(2,verificador);
+        Assert.assertEquals(0,verificador);
 
         //El usuario no existe verificador 1
         verificador = this.om.buyObjectByUser("APL","8");

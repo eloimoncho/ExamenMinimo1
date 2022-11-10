@@ -45,7 +45,6 @@ public class ObjetoManagerImpl implements ObjetoManager {
     public int registerUser(String name, String surname, String birthDate, String email, String password) {
         String ID = Integer.toString(this.users.size());
         User U = new User(ID, name, surname, birthDate, new Credenciales(email, password));
-        this.users.put(ID, U);
         // Búsqueda en el Hashmap de "usuarios" para encontrar si ya hay algún usuario con el mismo email.
         // "0" se puede, "1" ya hay un usuario con ese mail.
         int verificador = 0;
@@ -55,6 +54,9 @@ public class ObjetoManagerImpl implements ObjetoManager {
             if (Objects.equals(this.users.get(idHashmap).getCredenciales().getEmail(), email)){
                 verificador = 1;
             }
+        }
+        if (verificador==0){
+            this.users.put(ID, U);
         }
         return verificador;
     }

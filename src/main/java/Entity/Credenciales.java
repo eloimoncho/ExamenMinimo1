@@ -36,8 +36,4 @@ public class Credenciales {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public Boolean isEqual(Credenciales credenciales){
-        return (Objects.equals(this.email, credenciales.getEmail()) && Objects.equals(this.password, credenciales.getPassword()));
-    }
 }
