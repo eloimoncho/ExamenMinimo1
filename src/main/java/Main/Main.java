@@ -1,7 +1,7 @@
 package Main;
 
+
 import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.jersey.listing.ApiListingResourceJSON;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -10,12 +10,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import java.io.IOException;
 import java.net.URI;
 
-/**
- * Main class.
- *
- */
 public class Main {
-    // Base URI the Grizzly HTTP server will listen on
     public static final String BASE_URI = "http://localhost:8080/dsaApp/";
 
     /**
@@ -35,7 +30,7 @@ public class Main {
         beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/dsaApp");
         beanConfig.setContact("support@example.com");
-        beanConfig.setDescription("REST API for Tracks Manager");
+        beanConfig.setDescription("REST API for Shop Manager");
         beanConfig.setLicenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html");
         beanConfig.setResourcePackage("Service");
         beanConfig.setTermsOfServiceUrl("http://www.example.com/resources/eula");
@@ -68,4 +63,3 @@ public class Main {
         server.stop();
     }
 }
-

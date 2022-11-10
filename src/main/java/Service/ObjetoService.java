@@ -2,6 +2,7 @@ package Service;
 
 import Entity.*;
 import Manager.*;
+import Main.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -11,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "/objetos", description = "Endpoint to Objetos Service")
@@ -24,7 +26,7 @@ public class ObjetoService {
         public ObjetoService() {
             this.om = ObjetoManagerImpl.getInstance();
             if (om.size()==0) {
-                this.om.registerUser("Eloi", "Moncho", "28/08/2001","eloi.moncho@etudiantat.upc.edu" ,"28082001" );
+                this.om.registerUser("Eloi", "Moncho", "28/08/2001","eloi.moncho@estudiantat.upc.edu" ,"28082001" );
                 this.om.registerUser("Victor",  "Fernandez", "13/06/2001","victor.fernanadez@estudiantat.upc.edu", "13062001");
                 this.om.registerUser("Marc",  "Moran", "28/10/2001", "marc.moran@estudiantat.upc.edu", "28102001");
 
@@ -46,7 +48,6 @@ public class ObjetoService {
         public Response registerUser(User user){
             int verificador = this.om.registerUser(user.getUserName(), user.getUserSurname(), user.getDate(), user.getCredenciales().getEmail(), user.getCredenciales().getPassword());
             if(verificador == 0){
-
                 return Response.status(201).build();
             }
             else{
@@ -80,12 +81,12 @@ public class ObjetoService {
         })
         @Path("/login")
         @Produces(MediaType.APPLICATION_JSON)
-        public Response loginUser(User user) {
-            int verificador = this.om.loginUser(user.getCredenciales().getEmail(),user.getCredenciales().getPassword());
+        public Response loginUser(Credenciales credenciales) {
+            int verificador = this.om.loginUser(credenciales.getEmail(),credenciales.getPassword());
             if (verificador == 0)
                 return Response.status(201).build();
             else
-                return Response.status(404).entity(user).build();
+                return Response.status(404).entity(credenciales).build();
         }
 
         //Cuarta función: lista de objetos

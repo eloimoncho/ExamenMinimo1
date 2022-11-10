@@ -1,5 +1,6 @@
 package Entity;
 
+import java.util.*;
 public class ObjetoTienda {
 
     // Atributos
@@ -11,7 +12,7 @@ public class ObjetoTienda {
     //Constructores
 
     public ObjetoTienda(){}
-    public ObjetoTienda(String objectID, String objectName, String objectDescription, double objectCoins) {
+    public ObjetoTienda(String ID, String objectName, String objectDescription, double objectCoins) {
         this.objectID = objectID;
         this.objectName = objectName;
         this.objectDescription = objectDescription;
