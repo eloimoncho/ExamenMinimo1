@@ -1,20 +1,17 @@
 package Entity;
 import java.util.*;
 
-public class Juegos {
+public class Juego {
 
     // Atributos
     int juegoID;
-
     String descripcion;
-
     int niveles;
-
-    List<Juegos> listaJuegos;
+    List<Juego> listaJuegos;
 
     //Constructor
-    public Juegos(){}
-    public Juegos(int juegoID, String descripcion, int niveles) {
+    public Juego(){}
+    public Juego(int juegoID, String descripcion, int niveles) {
         this.juegoID = juegoID;
         this.descripcion = descripcion;
         this.niveles = niveles;
@@ -33,7 +30,7 @@ public class Juegos {
         return niveles;
     }
 
-    public List<Juegos> getListaJuegos() {
+    public List<Juego> getListaJuegos() {
         return listaJuegos;
     }
 
@@ -49,7 +46,21 @@ public class Juegos {
         this.niveles = niveles;
     }
 
-    public void setListaJuegos(List<Juegos> listaJuegos) {
+    public void setListaJuegos(List<Juego> listaJuegos) {
         this.listaJuegos = listaJuegos;
+    }
+
+    public void anadirJuego(Juego juego){
+        this.listaJuegos.add(juego);
+    }
+    public Juego getJuego(int juegoID){
+        int numJuegos=this.listaJuegos.size();
+        for (int i=0; i<numJuegos; i++){
+            if (this.listaJuegos.get(i).juegoID==juegoID){
+                return this.listaJuegos.get(i);
+            }
+        }
+        Juego noExiste= new Juego(-1,"noExiste",0);
+        return noExiste;
     }
 }

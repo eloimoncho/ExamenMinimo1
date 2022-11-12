@@ -4,20 +4,20 @@ import Entity.*;
 import Main.*;
 import Manager.*;
 
-public class Usuarios {
+public class Usuario {
 
     //Atributos
 
     int usuarioID;
     String nombre;
 
-    List<Usuarios> listaUsuarios;
+    List<Usuario> listaUsuarios;
 
 
     //Constructores
-    public Usuarios(){}
+    public Usuario(){}
 
-    public Usuarios(int usuarioID, String nombre) {
+    public Usuario(int usuarioID, String nombre) {
         this.usuarioID = usuarioID;
         this.nombre = nombre;
     }
@@ -32,7 +32,7 @@ public class Usuarios {
         return nombre;
     }
 
-    public List<Usuarios> getListaUsuarios() {
+    public List<Usuario> getListaUsuarios() {
         return listaUsuarios;
     }
 
@@ -44,7 +44,18 @@ public class Usuarios {
         this.nombre = nombre;
     }
 
-    public void setListaUsuarios(List<Usuarios> listaUsuarios) {
+    public void setListaUsuarios(List<Usuario> listaUsuarios) {
         this.listaUsuarios = listaUsuarios;
+    }
+
+    public Usuario getUsuario(int usuarioID) {
+        int numUsers = this.listaUsuarios.size();
+        for (int i = 0; i < numUsers; i++) {
+            if (this.listaUsuarios.get(i).getUsuarioID() == usuarioID) { //Encontramos el usuario
+                return this.listaUsuarios.get(i);
+            }
+        }
+        Usuario noExiste = new Usuario(-1,"noExisto");
+        return noExiste;
     }
 }

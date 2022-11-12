@@ -7,7 +7,8 @@ import org.apache.log4j.Logger;
 public class PartidasManagerImpl implements PartidasManager {
 
     List<Partidas> listaPartidas;
-    HashMap<String, Usuario> listaUsuarios;
+    HashMap<String, Usuarios> listaUsuarios;
+    List<Juego> listaJuegos;
     private static PartidasManager instance;
     final static Logger logger = Logger.getLogger(PartidasManagerImpl.class);
 
@@ -30,12 +31,6 @@ public class PartidasManagerImpl implements PartidasManager {
     }
 
     //Funciones de PartidasManager
-    @Override
-    public int creacionPartida(String partidaID, String descripcion, int numNiveles) {
-        Partidas X = new Partidas(partidaID,descripcion,numNiveles);
-        X.setEstadoPartida(0); //la partida está activa, 1 cuando la partida finaliza
-        return X.getEstadoPartida();
-    }
 
     @Override
     public int inicioPartidaPorUsuario(String partidaID, String usuarioID) {
@@ -94,6 +89,44 @@ public class PartidasManagerImpl implements PartidasManager {
     }
 
     @Override
+    public int crearJuego(int partidaID, String descripcion, int numNiveles) {
+        return 0;
+    }
+
+    @Override
+    public int inicioPartidaPorUsuario(int usuarioID, int juegoID) {
+        Juego aux1 = new Juego();
+        Juego miJuego= aux1.getJuego(juegoID);
+        Usuario aux2 = new Usuario();
+        Usuario miUsuario = aux2.getUsuario(usuarioID);
+        if (miJuego.getJuegoID()==-1){
+            return -2; //no existe este juego
+        }
+        if (miUsuario.getUsuarioID()==-1){
+            return -1; //no existe este usuario
+        }
+        Partidas aux3 = new Partidas(usuarioID,juegoID);
+        this.listaPartidas.add(aux3);
+        return 0;
+    }
+
+    @Override
+    public int nivelActual(int usuarioID) {
+        int miNivel=0;
+
+    }
+
+    @Override
+    public int puntuacionActual(int usuarioID) {
+        return 0;
+    }
+
+    @Override
+    public int pasarNivel(int usuarioID, int puntos, String fecha) {
+        return 0;
+    }
+
+    @Override
     public int finalizarPartida(String usuarioID) { //retorna 0
         int numUsers = this.listaUsuarios.size();
         for (int i = 0; i < numUsers; i++) {
@@ -112,6 +145,21 @@ public class PartidasManagerImpl implements PartidasManager {
             }
         }
         return 0;
+    }
+
+    @Override
+    public List<Usuarios> usuariosPorJuego(int partidaID) {
+        return null;
+    }
+
+    @Override
+    public List<Juegos> juegosPorUsuario(int usuarioID) {
+        return null;
+    }
+
+    @Override
+    public List<Partidas> actividadJuegoPorUsuario(int usuarioID, int partidaID) {
+        return null;
     }
 
 
