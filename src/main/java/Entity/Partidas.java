@@ -4,62 +4,84 @@ import java.util.*;
 public class Partidas {
 
     // Atributos
-    String partidaID;
+    int usuarioID;
+    int juegoID;
+    String fecha;
+    int nivelActual;
+    int puntos;
+    boolean activo;
 
-    String partidaDescripcion;
+    List<Partidas> listaPartidas;
 
-    int niveles;
 
-    List<Usuario> listaUsuarios;
 
-    int estadoPartida; //0 se está jugando la partida, 1 se ha finalizado la partida
 
     //Constructores
 
     public Partidas(){}
 
-    public Partidas(String partidaID, String partidaDescripcion, int niveles) {
-        this.partidaID = partidaID;
-        this.partidaDescripcion = partidaDescripcion;
-        this.niveles = niveles;
+    public Partidas(int usuarioID, int juegoID) {
+        this.usuarioID = usuarioID;
+        this.juegoID = juegoID;
+        this.fecha = "dd/mm/year"; //fecha actual
+        this.nivelActual=1;
+        this.puntos=50;
+        this.activo=true;
     }
-
     //Getters y Setters
-
-    public String getPartidaID() {
-        return partidaID;
+    public int getUsuarioID() {
+        return usuarioID;
     }
 
-    public String getPartidaDescripcion() {
-        return partidaDescripcion;
+    public int getJuegoID() {
+        return juegoID;
     }
 
-    public int getNiveles() {
-        return niveles;
+    public String getFecha() {
+        return fecha;
     }
 
-    public int getEstadoPartida() {
-        return estadoPartida;
+    public int getNivelActual() {
+        return nivelActual;
     }
 
-    public void setPartidaID(String partidaID) {
-        this.partidaID = partidaID;
+    public int getPuntos() {
+        return puntos;
     }
 
-    public void setPartidaDescripcion(String partidaDescripcion) {
-        this.partidaDescripcion = partidaDescripcion;
+    public boolean isActivo() {
+        return activo;
     }
 
-    public void setNiveles(int niveles) {
-        this.niveles = niveles;
+    public List<Partidas> getListaPartidas() {
+        return listaPartidas;
     }
 
-    public void setEstadoPartida(int estadoPartida) {
-        this.estadoPartida = estadoPartida;
+    public void setUsuarioID(int usuarioID) {
+        this.usuarioID = usuarioID;
     }
 
-    public List<Usuario> getListaUsuarios() {
-        return listaUsuarios;
+    public void setJuegoID(int juegoID) {
+        this.juegoID = juegoID;
     }
 
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setNivelActual(int nivelActual) {
+        this.nivelActual = nivelActual;
+    }
+
+    public void setPuntos(int puntos) {
+        this.puntos = puntos;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public void setListaPartidas(List<Partidas> listaPartidas) {
+        this.listaPartidas = listaPartidas;
+    }
 }
