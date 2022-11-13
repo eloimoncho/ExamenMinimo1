@@ -20,7 +20,7 @@ import java.util.List;
 
 
 public class PartidasService {
-
+/*
         private PartidasManager pm;
 
         public PartidasService() {

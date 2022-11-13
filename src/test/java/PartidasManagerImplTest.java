@@ -17,9 +17,16 @@ public class PartidasManagerImplTest {
     public void setUp() {
         pm = new PartidasManagerImpl();
         //Añadir objetos
+        this.pm.addUsuario(1,"Alba");
+        this.pm.addUsuario(2,"Marc");
+        this.pm.addUsuario(3,"Isaac");
+
         this.pm.crearJuego(1, "Apolo", 2);
         this.pm.crearJuego(2, "Razz", 3);
         this.pm.crearJuego(3, "Costa", 4);
+
+        this.pm.inicioPartidaPorUsuario(1,1);
+        this.pm.inicioPartidaPorUsuario(2,2);
 
     }
 
@@ -30,11 +37,50 @@ public class PartidasManagerImplTest {
 
     //TEST
     @Test
-    public void crearJuego() {
-        //Usuario nuevo
-        Assert.assertEquals(3, this.pm.numUsuarios());
-        this.pm.crearJuego(4,"Serra", 3);
-        Assert.assertEquals(4, this.pm.numUsuarios());
+    public void crearJuegoTest() {
+        Assert.assertEquals(3, this.pm.numJuegos());
+        this.pm.crearJuego(4,"Bar", 3);
+        Assert.assertEquals(4, this.pm.numJuegos());
+    }
+    @Test
+    public void inicioPartidaPorUsuarioTest(){
+        int verificador = this.pm.inicioPartidaPorUsuario(1,2);
+        Assert.assertEquals(0,verificador);
+    }
+    @Test
+    public void nivelActualTest(){
+        int miNivel=this.pm.nivelActual(2);
+        Assert.assertEquals(1,miNivel);
+    }
+
+    @Test
+    public void puntuacionActualTest(){
+        int puntos=this.pm.puntuacionActual(2);
+        Assert.assertEquals(50,puntos);
+    }
+
+    @Test
+    public void finalizarPartidaTest(){
+        int verificador = this.pm.finalizarPartida(2);
+        Assert.assertEquals(0,verificador);
+        verificador = this.pm.finalizarPartida(5);
+        Assert.assertEquals(-1,verificador);
+
+        verificador=this.pm.finalizarPartida(3);
+       Assert.assertEquals(-2,verificador);
+    }
+    @Test
+    public void usuariosPorJuegoTest(){
+        this.pm.addUsuario(4,"Oriol");
+        this.pm.addUsuario(5,"Marc");
+        this.pm.inicioPartidaPorUsuario(4,1);
+        this.pm.inicioPartidaPorUsuario(5,1);
+
+        List<Usuario> usuarios = this.pm.usuariosPorJuego(1);
+
+        Assert.assertEquals(1,usuarios.get(0).getUsuarioID());
+        Assert.assertEquals(4,usuarios.get(1).getUsuarioID());
+        Assert.assertEquals(5,usuarios.get(2).getUsuarioID());
     }
 /*
     @Test

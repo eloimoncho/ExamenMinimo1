@@ -48,14 +48,5 @@ public class Usuario {
         this.listaUsuarios = listaUsuarios;
     }
 
-    public Usuario getUsuario(int usuarioID) {
-        int numUsers = this.listaUsuarios.size();
-        for (int i = 0; i < numUsers; i++) {
-            if (this.listaUsuarios.get(i).getUsuarioID() == usuarioID) { //Encontramos el usuario
-                return this.listaUsuarios.get(i);
-            }
-        }
-        Usuario noExiste = new Usuario(-1,"noExisto");
-        return noExiste;
-    }
+
 }

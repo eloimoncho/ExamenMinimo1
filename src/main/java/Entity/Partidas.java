@@ -11,11 +11,6 @@ public class Partidas {
     int puntos;
     boolean activo;
 
-    List<Partidas> listaPartidas;
-
-
-
-
     //Constructores
 
     public Partidas(){}
@@ -53,10 +48,6 @@ public class Partidas {
         return activo;
     }
 
-    public List<Partidas> getListaPartidas() {
-        return listaPartidas;
-    }
-
     public void setUsuarioID(int usuarioID) {
         this.usuarioID = usuarioID;
     }
@@ -79,23 +70,5 @@ public class Partidas {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
-    }
-
-    public void setListaPartidas(List<Partidas> listaPartidas) {
-        this.listaPartidas = listaPartidas;
-    }
-
-    public void anadirPartida(Partidas partida){
-        this.listaPartidas.add(partida);
-    }
-    public Partidas getPartida(int usuarioID){
-        int numPartidas = this.listaPartidas.size();
-        for (int i=0; i<numPartidas; i++){
-            if (this.listaPartidas.get(i).getUsuarioID() == usuarioID){ //Encontramos el usuario
-                return this.listaPartidas.get(i);
-            }
-        }
-        Partidas noExiste = new Partidas(-1,-1);
-        return noExiste;
     }
 }

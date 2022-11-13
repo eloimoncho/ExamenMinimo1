@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 public class PartidasManagerImpl implements PartidasManager {
 
     List<Partidas> listaPartidas;
-    HashMap<String, Usuarios> listaUsuarios;
+    List<Usuario> listaUsuarios;
     List<Juego> listaJuegos;
     private static PartidasManager instance;
     final static Logger logger = Logger.getLogger(PartidasManagerImpl.class);
@@ -27,78 +27,58 @@ public class PartidasManagerImpl implements PartidasManager {
 
     public PartidasManagerImpl() {
         this.listaPartidas = new ArrayList<>();
-        this.listaUsuarios = new HashMap<>();
+        this.listaUsuarios = new ArrayList<>();
+        this.listaJuegos = new ArrayList<>();
     }
 
     //Funciones de PartidasManager
 
-    @Override
-    public int inicioPartidaPorUsuario(String partidaID, String usuarioID) {
-        int posibleJugar=1;
-
+    public void addUsuario(int usuarioID, String name){
+        Usuario usuario = new Usuario(usuarioID,name);
+        this.listaUsuarios.add(usuario);
+    }
+    public Juego getJuego(int juegoID){
+        int numJuegos=this.listaJuegos.size();
+        for (int i=0; i<numJuegos; i++){
+            if (this.listaJuegos.get(i).getJuegoID()==juegoID){
+                return this.listaJuegos.get(i);
+            }
+        }
+        Juego noExiste= new Juego(-1,"noExiste",0);
+        return noExiste;
+    }
+    public Usuario getUsuario(int usuarioID) {
         int numUsers = this.listaUsuarios.size();
-        for (int i=0; i<numUsers; i++){
-            String idHashmap = Integer.toString(i);
-            if ((Objects.equals(this.listaUsuarios.get(idHashmap).getUsuarioID(), usuarioID)) && this.listaUsuarios.get(idHashmap).getJugandoPartida()!="0"){ //El usuario no está jugando otra partida
-                int numPartidas=this.listaPartidas.size();
-                for (int j=0;j<numPartidas;j++) {
-                    if ((Objects.equals(this.listaPartidas.get(j).getPartidaID(), partidaID)) && this.listaPartidas.get(j).getEstadoPartida()==0){ // La partida está en curso
-                        posibleJugar=0;
-                    }
-                }
+        for (int i = 0; i < numUsers; i++) {
+            if (this.listaUsuarios.get(i).getUsuarioID() == usuarioID) { //Encontramos el usuario
+                return this.listaUsuarios.get(i);
             }
         }
-        return posibleJugar;
+        Usuario noExiste = new Usuario(-1,"noExisto");
+        return noExiste;
     }
-
     @Override
-    public int nivelActual(String usuarioID) {
-        int nivel=0;
-        for (int i=0;i<this.listaPartidas.size();i++){
-            if(Objects.equals(this.listaUsuarios.get(usuarioID).getJugandoPartida(),this.listaPartidas.get(i).getPartidaID())){
-                nivel = this.listaUsuarios.get(usuarioID).getNivelUsuario();
+    public Partidas getPartida(int usuarioID){
+        int numPartidas = this.listaPartidas.size();
+        for (int i=0; i<numPartidas; i++){
+            if (this.listaPartidas.get(i).getUsuarioID() == usuarioID){ //Encontramos el usuario
+                return this.listaPartidas.get(i);
             }
         }
-        return nivel;
+        Partidas noExiste = new Partidas(-1,-1);
+        return noExiste;
     }
 
     @Override
-    public int puntuacionActual(String usuarioID) {
-        int puntuacion =  this.listaUsuarios.get(usuarioID).getPuntos();
-        return puntuacion;
-    }
-
-    @Override
-    public int pasarNivel(String usuarioID, String fecha) {
-        int nuevoNivel = this.listaUsuarios.get(usuarioID).getNivelUsuario();
-        for (int i = 0; i<this.listaPartidas.size();i++){
-            if (Objects.equals(this.listaUsuarios.get(usuarioID).getJugandoPartida(), this.listaPartidas.get(i).getPartidaID())){
-                if (this.listaPartidas.get(i).getNiveles() >nuevoNivel){
-                    nuevoNivel=nuevoNivel+1;
-                }
-                else{
-                    int puntos = this.listaUsuarios.get(i).getPuntos() + 100;
-                    this.listaUsuarios.get(usuarioID).setPuntos(puntos);
-                    String partidaJugando="0";
-                    this.listaUsuarios.get(usuarioID).setJugandoPartida(partidaJugando);
-                    nuevoNivel=0;
-                }
-            }
-        }
-        return nuevoNivel;
-    }
-
-    @Override
-    public int crearJuego(int partidaID, String descripcion, int numNiveles) {
-        return 0;
+    public void crearJuego(int juegoID, String descripcion, int numNiveles) {
+        Juego juego= new Juego(juegoID,descripcion,numNiveles);
+        this.listaJuegos.add(juego);
     }
 
     @Override
     public int inicioPartidaPorUsuario(int usuarioID, int juegoID) {
-        Juego aux1 = new Juego();
-        Juego miJuego= aux1.getJuego(juegoID);
-        Usuario aux2 = new Usuario();
-        Usuario miUsuario = aux2.getUsuario(usuarioID);
+        Juego miJuego= getJuego(juegoID);
+        Usuario miUsuario = getUsuario(usuarioID);
         if (miJuego.getJuegoID()==-1){
             return -2; //no existe este juego
         }
@@ -113,12 +93,35 @@ public class PartidasManagerImpl implements PartidasManager {
     @Override
     public int nivelActual(int usuarioID) {
         int miNivel=0;
+        Partidas partida = new Partidas();
+        partida=getPartida(usuarioID);
+        Usuario miUsuario = getUsuario(usuarioID);
+        if (miUsuario.getUsuarioID() == -1) {
+            return -1;  //no existe este usuario
+        }
+        if(partida.getJuegoID()==-1){
+            return -2; //el usuario no está jugando ninguna partida
+        }
+        miNivel=partida.getNivelActual();
+        return miNivel;
 
     }
 
     @Override
     public int puntuacionActual(int usuarioID) {
-        return 0;
+        int puntos=0;
+        Partidas partida = new Partidas();
+        partida=getPartida(usuarioID);
+        Usuario miUsuario = getUsuario(usuarioID);
+        if (miUsuario.getUsuarioID() == -1) {
+            return -1;  //no existe este usuario
+        }
+        if(partida.getJuegoID()==-1){
+            return -2; //el usuario no está jugando ninguna partida
+        }
+        puntos=partida.getPuntos();
+        return puntos;
+
     }
 
     @Override
@@ -127,33 +130,37 @@ public class PartidasManagerImpl implements PartidasManager {
     }
 
     @Override
-    public int finalizarPartida(String usuarioID) { //retorna 0
-        int numUsers = this.listaUsuarios.size();
-        for (int i = 0; i < numUsers; i++) {
-            String idHashmap = Integer.toString(i);
-            if ((Objects.equals(this.listaUsuarios.get(idHashmap).getUsuarioID(), usuarioID))) {
-                if (Objects.equals(this.listaUsuarios.get(usuarioID).getJugandoPartida(), "0")) {
-                    return -1; // El usuario no está jugando ninguna partida
-                } else {
-                    if (this.listaPartidas.get(i).getEstadoPartida() == 0) {
-                        this.listaUsuarios.get(usuarioID).setJugandoPartida("0");
-                        return 0; //Se ha finalizado la partida
-                    } else {
-                        return -2; //La partida no està en curs
-                    }
-                }
-            }
+    public int finalizarPartida(int usuarioID) {
+        boolean finalizar = true;
+        Partidas partida = new Partidas();
+        partida=getPartida(usuarioID);
+        Usuario miUsuario = getUsuario(usuarioID);
+        if (miUsuario.getUsuarioID() == -1) {
+            return -1;  //no existe este usuario
         }
+        if(partida.getJuegoID()==-1){
+            return -2; //el usuario no está jugando ninguna partida
+        }
+        partida.setActivo(false);
         return 0;
     }
 
+
     @Override
-    public List<Usuarios> usuariosPorJuego(int partidaID) {
-        return null;
+    public List<Usuario> usuariosPorJuego(int juegoID) {
+        List<Usuario> resultado = new ArrayList<>();
+        for(int i=0; i<this.listaPartidas.size();i++){
+            Usuario aux1 = new Usuario();
+            if(this.listaPartidas.get(i).getJuegoID() == juegoID){
+                aux1=getUsuario(this.listaPartidas.get(i).getUsuarioID());
+                resultado.add(aux1);
+            }
+        }
+        return resultado;
     }
 
     @Override
-    public List<Juegos> juegosPorUsuario(int usuarioID) {
+    public List<Juego> juegosPorUsuario(int usuarioID) {
         return null;
     }
 
@@ -162,28 +169,10 @@ public class PartidasManagerImpl implements PartidasManager {
         return null;
     }
 
-
-    @Override
-    public List<Usuario> usuariosJugadoPartida(String partidaID) {
-        List<Usuario> listaUsuariosPartida= new ArrayList<>();
-        for (int i=0;i<this.listaUsuarios.size();i++){
-            String idHashMap=Integer.toString(i);
-            if (Objects.equals(this.listaUsuarios.get(idHashMap).getJugandoPartida(),partidaID)){
-                Usuario aux=new Usuario(listaUsuarios.get(idHashMap).getUsuarioID(),listaUsuarios.get(idHashMap).getFecha());
-                listaUsuariosPartida.add(aux);
-            }
-        }
-        return listaUsuariosPartida;
-    }
-
-    @Override
-    public List<Partidas> partidasJugadasPorUsuario(String usuarioID) {
-        return listaUsuarios.get(usuarioID).getListaPartidas();
-    }
-
-
-
     //Funciones de implementación
+    public int numJuegos(){
+        return this.listaJuegos.size();
+    }
     @Override
     public int numPartidas() {
         return this.listaPartidas.size();
