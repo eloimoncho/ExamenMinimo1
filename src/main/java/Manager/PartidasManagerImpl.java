@@ -9,6 +9,7 @@ public class PartidasManagerImpl implements PartidasManager {
     List<Partidas> listaPartidas;
     List<Usuario> listaUsuarios;
     List<Juego> listaJuegos;
+    List<Actividad> listaActividad;
     private static PartidasManager instance;
     final static Logger logger = Logger.getLogger(PartidasManagerImpl.class);
 
@@ -29,6 +30,7 @@ public class PartidasManagerImpl implements PartidasManager {
         this.listaPartidas = new ArrayList<>();
         this.listaUsuarios = new ArrayList<>();
         this.listaJuegos = new ArrayList<>();
+        this.listaActividad = new ArrayList<>();
     }
 
     //Funciones de PartidasManager
@@ -126,7 +128,33 @@ public class PartidasManagerImpl implements PartidasManager {
 
     @Override
     public int pasarNivel(int usuarioID, int puntos, String fecha) {
-        return 0;
+        int nivelActual= nivelActual(usuarioID);
+        if(nivelActual==-1 || nivelActual==-2){
+            return nivelActual;
+        }
+        Partidas p=new Partidas();
+        p=getPartida(usuarioID);
+        int juegoID = p.getJuegoID();
+        Juego j=new Juego();
+        j=getJuego(juegoID);
+        int maxNiveles=j.getNiveles();
+        if(maxNiveles == nivelActual){
+            int puntosActual = p.getPuntos()+100;
+            p.setPuntos(puntosActual);
+            finalizarPartida(usuarioID);
+            Actividad actividad = new Actividad(nivelActual, puntosActual, fecha);
+            p.addActividad(actividad);
+            return 0;// Ha llegado al máximo de niveles
+        }
+        nivelActual=nivelActual+1;
+        int puntosActual = p.getPuntos() + puntos;
+        Actividad actividad = new Actividad(nivelActual, puntosActual, fecha);
+        p.addActividad(actividad);
+        p.setNivelActual(nivelActual);
+        p.setPuntos(puntosActual);
+        p.setFecha(fecha);
+        return nivelActual;
+
     }
 
     @Override
@@ -161,12 +189,34 @@ public class PartidasManagerImpl implements PartidasManager {
 
     @Override
     public List<Juego> juegosPorUsuario(int usuarioID) {
-        return null;
+        List<Juego> listJuegos = new ArrayList<>();
+        for(int i=0;i<this.listaPartidas.size();i++){
+            Juego aux1;
+            if(this.listaPartidas.get(i).getUsuarioID() == usuarioID){
+                aux1=getJuego(this.listaPartidas.get(i).getJuegoID());
+                listJuegos.add(aux1);
+            }
+        }
+        return listJuegos;
     }
 
     @Override
-    public List<Partidas> actividadJuegoPorUsuario(int usuarioID, int partidaID) {
-        return null;
+    public String actividadJuegoPorUsuario(int usuarioID, int juegoID) {
+        List<Actividad> actividad = new ArrayList<>();
+        for(int i=0;i<this.listaPartidas.size();i++){
+            if(this.listaPartidas.get(i).getUsuarioID() == usuarioID && this.listaPartidas.get(i).getJuegoID() == juegoID){
+                Usuario usuario = getUsuario(usuarioID);
+                Juego juego = getJuego(juegoID);
+                String listadoActividad="Actvidad: "+ usuario.getNombre()+", "+ juego.getDescripcion() + "--> ";
+                for(int j=0;j<this.listaPartidas.get(i).getListaActividad().size();j++){
+                    listadoActividad=listadoActividad + "(level: " + this.listaPartidas.get(i).getListaActividad().get(j).getNivel()
+                            + ", points: " + this.listaPartidas.get(i).getListaActividad().get(j).getPuntos()
+                            + ", date: " + this.listaPartidas.get(i).getListaActividad().get(j).getFecha() + ") ";
+                }
+                return listadoActividad;
+            }
+        }
+        return "This user hasn't played this game";
     }
 
     //Funciones de implementación

@@ -21,7 +21,7 @@ public class PartidasManagerImplTest {
         this.pm.addUsuario(2,"Marc");
         this.pm.addUsuario(3,"Isaac");
 
-        this.pm.crearJuego(1, "Apolo", 2);
+        this.pm.crearJuego(1, "Apolo", 3);
         this.pm.crearJuego(2, "Razz", 3);
         this.pm.crearJuego(3, "Costa", 4);
 
@@ -81,6 +81,47 @@ public class PartidasManagerImplTest {
         Assert.assertEquals(1,usuarios.get(0).getUsuarioID());
         Assert.assertEquals(4,usuarios.get(1).getUsuarioID());
         Assert.assertEquals(5,usuarios.get(2).getUsuarioID());
+    }
+
+    @Test
+    public void pasarNivelTest(){
+        this.pm.pasarNivel(1,50,"13/11/2022");
+        Assert.assertEquals(100,this.pm.puntuacionActual(1));
+        Assert.assertEquals(2,this.pm.nivelActual(1));
+        this.pm.pasarNivel(1,50,"14/11/2022");
+        Assert.assertEquals(150,this.pm.puntuacionActual(1));
+        Assert.assertEquals(3,this.pm.nivelActual(1));
+        this.pm.pasarNivel(1,50,"15/11/2022");
+        Assert.assertEquals(250,this.pm.puntuacionActual(1));
+        Assert.assertEquals(3,this.pm.nivelActual(1));
+    }
+
+    @Test
+    public void juegosPorUsuarioTest(){
+        //this.pm.inicioPartidaPorUsuario(1,1);
+        this.pm.inicioPartidaPorUsuario(1,2);
+        this.pm.inicioPartidaPorUsuario(1,3);
+
+        List<Juego> juegos = this.pm.juegosPorUsuario(1);
+        Assert.assertEquals(3,juegos.size());
+
+        Assert.assertEquals(1, juegos.get(0).getJuegoID());
+        Assert.assertEquals("Apolo", juegos.get(0).getDescripcion());
+        Assert.assertEquals(2, juegos.get(1).getJuegoID());
+        Assert.assertEquals("Razz", juegos.get(1).getDescripcion());
+        Assert.assertEquals(3, juegos.get(2).getJuegoID());
+        Assert.assertEquals("Costa", juegos.get(2).getDescripcion());
+    }
+
+    @Test
+    public void actividadJuegoPorUsuarioTest(){
+        this.pm.pasarNivel(1,50,"17/11/2022");
+        this.pm.pasarNivel(1,50,"18/11/2022");
+        this.pm.pasarNivel(1,50,"19/11/2022");
+
+        String listadoActividad = this.pm.actividadJuegoPorUsuario(1,1);
+        System.out.println(listadoActividad);
+
     }
 /*
     @Test

@@ -20,15 +20,22 @@ import java.util.List;
 
 
 public class PartidasService {
-/*
+
         private PartidasManager pm;
 
         public PartidasService() {
             this.pm = PartidasManagerImpl.getInstance();
             if (pm.size()==0) {
-                this.pm.creacionPartida("Brawl", "Guerra", 10 );
-                this.pm.creacionPartida("Agario",  "Guai",2);
-                this.pm.creacionPartida("Candy",  "Arcade", 3);
+                this.pm.addUsuario(1,"Alba");
+                this.pm.addUsuario(2,"Marc");
+                this.pm.addUsuario(3,"Isaac");
+
+                this.pm.crearJuego(1, "Apolo", 3);
+                this.pm.crearJuego(2, "Razz", 3);
+                this.pm.crearJuego(3, "Costa", 4);
+
+                this.pm.inicioPartidaPorUsuario(1,1);
+                this.pm.inicioPartidaPorUsuario(2,2);
             }
         }
 
@@ -38,11 +45,10 @@ public class PartidasService {
         @ApiResponses(value = {
                 @ApiResponse(code = 201, message = "El juego se inicia correctamente"),
                 @ApiResponse(code = 404, message = "No es posible iniciar el juego"),
-
         })
-        @Path("/BuyObject/{partidaID}/{usuarioID}")
-        public Response inicioPartidaPorUsuario(@PathParam("partidaID") String partidaID, @PathParam("usuarioID") String usuarioID) {
-            int verificador = this.pm.inicioPartidaPorUsuario(partidaID,usuarioID);
+        @Path("/BuyObject/{usuarioID}/{juegoID}")
+        public Response inicioPartidaPorUsuario(@PathParam("juegoID") String partidaID, @PathParam("usuarioID") String usuarioID) {
+            int verificador = this.pm.inicioPartidaPorUsuario(usuarioID,juegoID);
             if (verificador==0) {
                 return Response.status(201).build();
             }

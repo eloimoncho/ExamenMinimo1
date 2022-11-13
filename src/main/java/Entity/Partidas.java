@@ -11,6 +11,8 @@ public class Partidas {
     int puntos;
     boolean activo;
 
+    List<Actividad> listaActividad;
+
     //Constructores
 
     public Partidas(){}
@@ -18,10 +20,13 @@ public class Partidas {
     public Partidas(int usuarioID, int juegoID) {
         this.usuarioID = usuarioID;
         this.juegoID = juegoID;
-        this.fecha = "dd/mm/year"; //fecha actual
+        this.fecha = "10/11/2022"; //fecha actual
         this.nivelActual=1;
         this.puntos=50;
         this.activo=true;
+        this.listaActividad=new ArrayList<>();
+        Actividad a= new Actividad(this.nivelActual,this.puntos,this.fecha);
+        this.listaActividad.add(a);
     }
     //Getters y Setters
     public int getUsuarioID() {
@@ -70,5 +75,17 @@ public class Partidas {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+
+    public List<Actividad> getListaActividad() {
+        return listaActividad;
+    }
+
+    public void setListaActividad(List<Actividad> listaActividad) {
+        this.listaActividad = listaActividad;
+    }
+
+    public void addActividad(Actividad actividad){
+        this.listaActividad.add(actividad);
     }
 }
