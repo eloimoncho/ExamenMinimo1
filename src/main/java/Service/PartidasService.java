@@ -1,6 +1,7 @@
 package Service;
 
 import Entity.*;
+import Entity.Usuario;
 import Manager.*;
 import Main.*;
 import io.swagger.annotations.Api;
@@ -35,6 +36,7 @@ public class PartidasService {
             this.pm.crearJuego(3, "Costa", 4);
 
             this.pm.inicioPartidaPorUsuario(1, 1);
+            this.pm.inicioPartidaPorUsuario(1, 2);
             this.pm.inicioPartidaPorUsuario(2, 2);
         }
     }
@@ -44,16 +46,13 @@ public class PartidasService {
     @ApiOperation(value = "Crear Juego", notes = "asdasd")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Creado correctamente", response = Juego.class),
-            @ApiResponse(code = 404, message = "Ya existe un juego con este ID")
+            //@ApiResponse(code = 404, message = "Ya existe un juego con este ID")
 
     })
     @Path("/juegos/crear")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createJuego(Juego juego) {
-        int juegoCreado = this.pm.crearJuego(juego.getJuegoID(), juego.getDescripcion(), juego.getNiveles());
-
-        if (juegoCreado == -1)
-            return Response.status(404).build();
+    public Response crearJuego(Juego juego) {
+        this.pm.crearJuego(juego.getJuegoID(), juego.getDescripcion(), juego.getNiveles());
         return Response.status(201).entity(juego).build();
     }
 
@@ -82,9 +81,9 @@ public class PartidasService {
             @ApiResponse(code = 404, message = "Este jugador no existe"),
             @ApiResponse(code = 405, message = "Este jugador no está en ninguna partida")
     })
-    @Path("/player/{id}/nivelActual")
+    @Path("/player/{usuarioID}/nivelActual")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getNivelActual(@PathParam("id") int usuarioID) {
+    public Response getNivelActual(@PathParam("usuarioID") int usuarioID) {
         int nivel = this.pm.nivelActual(usuarioID);
         if (nivel == -1){
             return Response.status(404).build();
@@ -139,7 +138,7 @@ public class PartidasService {
             return Response.status(200).build();
     }
     @PUT
-    @ApiOperation(value = "Iniciar un juego", notes = "asdasd")
+    @ApiOperation(value = "Finalizar un juego", notes = "asdasd")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "El juego se inicia correctamente"),
             @ApiResponse(code = 404, message = "No es posible iniciar el juego, el usuario no existe"),
@@ -175,7 +174,7 @@ public class PartidasService {
     }
 
     @GET
-    @ApiOperation(value = "partidas jugadas por un usuario", notes = "asdasd")
+    @ApiOperation(value = "juegos jugados por un usuario", notes = "asdasd")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = Partidas.class, responseContainer="List"),
             @ApiResponse(code = 404, message = "este jugador no existe")
@@ -188,12 +187,25 @@ public class PartidasService {
             GenericEntity<List<Usuario>> entity = new GenericEntity<List<Usuario>>(listUsuarios) {};
             return Response.status(200).entity(entity).build();
         }
-        return Response.status(404).build();
+        else
+            return Response.status(404).build();
     }
 
+    @GET
+    @ApiOperation(value = "actividad de una partida", notes = "asdasd")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = Partidas.class, responseContainer="List"),
+    })
+    @Path("/usuario/{usuarioID}/{juegoID}/partidas")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actividadJuegoPorUsuario(@PathParam("usuarioID") int usuarioID, @PathParam("juegoID") int juegoID) {
+        String listadoActividad =  this.pm.actividadJuegoPorUsuario(usuarioID,juegoID);
+
+        GenericEntity<String> entity = new GenericEntity<String>(listadoActividad) {};
+        return Response.status(200).entity(entity).build();
 
 
-
+    }
 
 }
 
