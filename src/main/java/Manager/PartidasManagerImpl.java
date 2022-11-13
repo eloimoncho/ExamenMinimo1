@@ -71,10 +71,17 @@ public class PartidasManagerImpl implements PartidasManager {
         return noExiste;
     }
 
+
     @Override
-    public void crearJuego(int juegoID, String descripcion, int numNiveles) {
+    public int crearJuego(int juegoID, String descripcion, int numNiveles) {
+        for(int i=0;i<this.listaJuegos.size();i++){
+            if(this.listaJuegos.get(i).getJuegoID()==juegoID){
+                return -1;
+            }
+        }
         Juego juego= new Juego(juegoID,descripcion,numNiveles);
         this.listaJuegos.add(juego);
+        return 0;
     }
 
     @Override
